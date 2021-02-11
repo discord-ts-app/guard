@@ -1,6 +1,6 @@
-import Bot from '@discord-ts-app/core'
+import Core from '@discord-ts-app/core'
 import Env from '@discord-ts-app/env'
-import { Lifecycle, Lifecycles } from '@discord-ts-app/lifecycle'
+import { Lifecycle } from '@discord-ts-app/lifecycle'
 import { GuildMember, Message } from 'discord.js'
 
 const settings = {
@@ -10,18 +10,18 @@ const settings = {
 }
 
 export default class Guard {
-	private bot: Bot
+	private bot: Core
 
-	constructor(bot: Bot) {
+	constructor(bot: Core) {
 		this.bot = bot
 	}
 
-	public async protect(bot: Bot, message: Message) {
+	public async protect(bot: Core, message: Message) {
 		const { content, member } = message
 
 		if (message.author?.bot) return
 		if (!content.startsWith(settings.PREFIX)) {
-			return new Lifecycle(Lifecycles.MESSAGE_RECEIVED, { message })
+			return new Lifecycle('messageReceived', { message })
 		}
 
 		const sender: GuildMember = member!
@@ -43,7 +43,7 @@ export default class Guard {
 					await run(message, args.slice(1))
 				}
 				await message.delete()
-				new Lifecycle(Lifecycles.COMMAND_RECEIVED)
+				new Lifecycle('commandReceived')
 			})
 	}
 }
