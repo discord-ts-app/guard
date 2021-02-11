@@ -19,7 +19,7 @@ export default class Guard {
 	public async protect(bot: Bot, message: Message) {
 		const { content, member } = message
 
-		if (message.client.user?.bot) return
+		if (message.author?.bot) return
 		if (!content.startsWith(settings.PREFIX)) {
 			return new Lifecycle(Lifecycles.MESSAGE_RECEIVED, { message })
 		}
