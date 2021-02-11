@@ -19,6 +19,7 @@ export default class Guard {
 	public async protect(bot: Bot, message: Message) {
 		const { content, member } = message
 
+		if (message.client.user?.bot) return
 		if (!content.startsWith(settings.PREFIX)) {
 			return new Lifecycle(Lifecycles.MESSAGE_RECEIVED, { message })
 		}
@@ -35,7 +36,7 @@ export default class Guard {
 					if (hasRoles(roles!, sender)) {
 						await run(message, args.slice(1))
 					} else {
-						const msg = await sender.lastMessage!.reply(settings.NOT_ALLOWED_EXECUTE_COMMAND)
+						const msg = await message.reply(settings.NOT_ALLOWED_EXECUTE_COMMAND)
 						await msg.delete({ timeout: parseInt(settings.DELETE_TIMEOUT) || 5000 })
 					}
 				} else {
